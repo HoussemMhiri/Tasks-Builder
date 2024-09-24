@@ -1,20 +1,51 @@
 <template>
   <div class="todos_container">
     <div class="btn-group">
-      <select name="dropdown-menu" id="">
+      <select name="dropdown-menu" id="" v-model="status">
         <option value="all">All</option>
         <option value="complete">Complete</option>
         <option value="uncomplete">Uncomplete</option>
       </select>
     </div>
     <div class="todo_container">
-      <Task />
+      <Task
+        v-for="task in allTasks"
+        :key="task.id"
+        :task="task"
+        :getAllTasks="getAllTasks"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
+import { onMounted, ref, watch } from "vue";
 import Task from "./Task.vue";
+import axios from "../../../axiosToken";
+import dayjs from "dayjs";
+
+const props = defineProps(["query"]);
+
+const allTasks = ref("");
+
+const status = ref("all");
+
+const getAllTasks = async () => {
+  const { data } = await axios.get("api/tasks", {
+    params: { q: props.query, status: status.value },
+  });
+
+  allTasks.value = data.tasks;
+  console.log(allTasks.value);
+};
+
+onMounted(() => {
+  getAllTasks();
+});
+
+watch([() => props.query, () => status.value], ([x, y]) => {
+  getAllTasks();
+});
 </script>
 
 <style scoped>

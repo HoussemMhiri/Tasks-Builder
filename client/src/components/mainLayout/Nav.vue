@@ -14,15 +14,22 @@
     <!-- rightSide-->
     <div class="right-side side d-none d-lg-flex">
       <div class="icons">
-        <BellIcon />
+        <BellIcon
+          :notifications="notifications"
+          :fetchUserNotifications="fetchUserNotifications"
+        />
       </div>
-      <button type="button" class="btn btn-danger">Logout</button>
+      <button type="button" class="btn btn-danger" @click="logout">
+        Logout
+      </button>
       <div class="d-flex">
         <input
           class="form-control me-2"
           type="search"
           placeholder="Search"
           aria-label="Search"
+          v-model="search"
+          @input="hanldeSearch"
         />
         <button type="button" class="btn btn-success">Search</button>
       </div>
@@ -36,6 +43,46 @@
 <script setup>
 import NavBtn from "./NavBtn.vue";
 import BellIcon from "./BellIcon.vue";
+
+import { onMounted, ref } from "vue";
+import axios from "../../../axiosToken";
+
+//Data
+const notifications = ref([]);
+const search = ref("");
+
+//Emits
+const emit = defineEmits(["searchQuery"]);
+
+// Logout
+const logout = () => {
+  localStorage.clear();
+  window.location.reload();
+};
+
+// Notification
+const fetchUserNotifications = async () => {
+  const { data } = await axios.get("api/notifications");
+  notifications.value = data?.data;
+  console.log(notifications.value);
+};
+
+onMounted(() => {
+  fetchUserNotifications();
+
+  const userId = JSON.parse(localStorage.getItem("userData"));
+  window.Echo.private(`App.Models.User.${userId?.id}`).notification(
+    (notification) => {
+      notifications.value.push(notification);
+      fetchUserNotifications();
+    }
+  );
+});
+
+//Search
+const hanldeSearch = () => {
+  emit("searchQuery", search.value.trim());
+};
 </script>
 
 <style scoped>

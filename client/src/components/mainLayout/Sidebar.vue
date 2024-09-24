@@ -12,17 +12,40 @@
       </router-link>
       <p>Houssem</p>
     </div>
-
-    <div class="d-flex">
-      <ul>
-        <li><router-link to="/allTasks">Show Tasks</router-link></li>
-        <li><router-link to="/addTask">Add Task</router-link></li>
-      </ul>
+    <div class="allMenu">
+      <div class="d-flex">
+        <ul>
+          <li>
+            <router-link @click="active = false" to="/allTasks"
+              >Show Tasks</router-link
+            >
+          </li>
+          <li>
+            <router-link @click="active = false" to="/addTask"
+              >Add Task</router-link
+            >
+          </li>
+        </ul>
+      </div>
+      <div class="HomeMenu">
+        <i class="bi bi-house-fill"></i>
+        <router-link
+          to="/"
+          class="router_link_home"
+          :class="[active && 'activeHome']"
+          @click="active = true"
+          >Home</router-link
+        >
+      </div>
     </div>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { ref } from "vue";
+
+const active = ref(false);
+</script>
 
 <style scoped>
 .activeLink {
@@ -78,5 +101,33 @@ ul li a:hover {
   color: #f2faff;
   padding: 0 10px;
   transition: all 0.3s ease-in-out;
+}
+
+.allMenu {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 55vh;
+}
+
+.HomeMenu {
+  padding: 10px;
+}
+
+.router_link_home {
+  text-decoration: none;
+  font-size: 1.3rem;
+  color: #dbeafe;
+}
+
+.router_link_home:hover {
+  color: #f2faff;
+  padding: 0 20px;
+  transition: all 0.3s ease-in-out;
+}
+
+.activeHome {
+  color: #f2faff;
+  padding: 0 20px;
 }
 </style>

@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use App\Models\Task;
+use App\Notifications\TaskCompleted;
+use Illuminate\Http\Request;
 
 trait saveTaskTrait
 {
@@ -14,14 +16,16 @@ trait saveTaskTrait
     public function rules(): array
     {
         return [
-            'todo' => ['required', 'string'],
-            'isDone' => ['nullable', 'boolean'],
-            'end_before' => ['nullable', 'date'],
+            'todo' => ['nullable', 'string', 'required_without_all:isDone,end_before'],
+            'isDone' => ['nullable', 'boolean', 'required_without_all:todo,end_before'],
+            'end_before' => ['nullable', 'date', 'required_without_all:todo,isDone'],
         ];
     }
 
 
-    public function saveTask(Task $task)
+
+
+    public function saveTask(Task $task, Request $request)
     {
         $data = $this->only([
             'todo',
@@ -31,6 +35,12 @@ trait saveTaskTrait
 
 
         $task->fill($data)->save();
+
+        $user = auth()->user();
+
+        if ($task->isDone === true && !$request->query('taskUpdated')) {
+            $user->notify(new TaskCompleted($task));
+        }
 
         return $task;
     }

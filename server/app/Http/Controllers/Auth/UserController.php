@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
@@ -55,7 +56,7 @@ class UserController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        $token = $user->createToken($request->name . '_Token')->plainTextToken;
+        $token = $user->createToken($user->name . '_Token')->plainTextToken;
 
         return response()->json([
             'user' => $user,
@@ -70,5 +71,47 @@ class UserController extends Controller
         Auth::user()->tokens()->delete();
 
         return response()->json('Logout Successfully', 204);
+    }
+
+
+    public function fetch()
+    {
+
+        $user = auth()->user();
+
+
+        return response()->json([
+            'user' => $user
+        ], 200);
+    }
+
+    public function update(Request $request)
+    {
+        $user = auth()->user();
+
+        $request->validate([
+            'name' => ['required', 'string'],
+            'email' => ['required', Rule::unique('users', 'email')->ignore($user->id)],
+            'password' => ['sometimes', 'required', 'min:8'],
+            'avatar' => ['nullable']
+        ]);
+
+        $userUpdate = $request->only([
+            'name',
+            'email',
+            'password',
+            'avatar'
+        ]);
+
+        if ($request->hasFile('avatar')) {
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            $userUpdate['avatar'] = Storage::url($avatarPath);
+        }
+
+        $user->update($userUpdate);
+
+        return response()->json([
+            'data' => $user
+        ], 201);
     }
 }

@@ -36,15 +36,26 @@ const addTaskForm = ref({
 });
 
 const formatDate = (date) => {
-  return dayjs(date).format("YYYY-MM-DD HH:mm:ss");
+  return dayjs(date).format("YYYY-MM-DD HH:mm");
 };
 
 const addTask = async () => {
-  addTaskForm.value.end_before = formatDate(addTaskForm.value.end_before);
-  const { data } = await axios.post("api/tasks", addTaskForm.value);
-  console.log(data);
-  for (let key in addTaskForm.value) {
-    addTaskForm.value[key] = "";
+  try {
+    addTaskForm.value.end_before = formatDate(addTaskForm.value.end_before);
+    const { data } = await axios.post("api/tasks", addTaskForm.value);
+    console.log(data);
+
+    for (let key in addTaskForm.value) {
+      addTaskForm.value[key] = "";
+    }
+
+    await toast.fire({
+      icon: "success",
+      title: "Task Add it successfully",
+      timer: 3000,
+    });
+  } catch (error) {
+    console.log(error);
   }
 };
 </script>

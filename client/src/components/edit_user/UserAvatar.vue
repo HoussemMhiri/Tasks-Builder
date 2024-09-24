@@ -14,16 +14,10 @@
         <i class="bi bi-upload"></i>
       </button>
       <div class="image-preview">
-        <img
-          v-if="avatarPreview"
-          :src="avatarPreview"
-          alt="Avatar Preview"
-          class="avatar-image"
-        />
+        <img v-if="avatarPreview" :src="avatarPreview" class="avatar-image" />
         <img
           v-else
           src="https://cdn-icons-png.freepik.com/512/147/147144.png"
-          alt="Avatar Preview"
           class="avatar-image"
         />
       </div>
@@ -34,8 +28,11 @@
 <script setup>
 import { ref } from "vue";
 
+const props = defineProps(["avatarPreview"]);
+
+const emit = defineEmits(["update-avatar"]);
+
 const fileInput = ref("");
-const avatarPreview = ref("");
 
 const selectFile = () => {
   fileInput.value.click();
@@ -47,7 +44,8 @@ const handleFileUpload = (event) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = (e) => {
-      avatarPreview.value = e.target.result;
+      // Emit the updated avatar and preview to the parent component
+      emit("update-avatar", { preview: e.target.result, file });
     };
   }
 };

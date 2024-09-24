@@ -1,7 +1,7 @@
 <template>
   <div class="main-layout">
     <div class="navbar">
-      <Nav />
+      <Nav @search-query="searchQuery" />
     </div>
 
     <aside class="sidebar d-none d-lg-block">
@@ -12,15 +12,22 @@
     <SideBtn class="sideBtn" />
 
     <main class="content">
-      <router-view />
+      <router-view :query="query" />
     </main>
   </div>
 </template>
 
 <script setup>
+import { ref } from "vue";
 import Nav from "../components/mainLayout/Nav.vue";
 import Sidebar from "../components/mainLayout/Sidebar.vue";
 import SideBtn from "../components/tasks_menu/SideBtn.vue";
+
+const query = ref("");
+
+const searchQuery = (q) => {
+  query.value = q;
+};
 </script>
 
 <style scoped>
