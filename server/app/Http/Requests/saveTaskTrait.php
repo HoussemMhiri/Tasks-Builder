@@ -25,7 +25,7 @@ trait saveTaskTrait
 
 
 
-    public function saveTask(Task $task, Request $request)
+    public function saveTask(Task $task, Request $request = null)
     {
         $data = $this->only([
             'todo',

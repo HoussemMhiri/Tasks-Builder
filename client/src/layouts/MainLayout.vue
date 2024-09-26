@@ -59,6 +59,7 @@ const searchQuery = (q) => {
   margin: 20px;
   background-color: #dbeafe;
   border-radius: 10px;
+  /*  border: 1px solid red; */
 }
 
 @media (max-width: 992px) {

@@ -1,11 +1,7 @@
 <template>
   <div class="nav_container">
     <div class="left-side side">
-      <img
-        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqaPDdSaK-bgA5Ye6Du39dR54r5T1AbYx7NA&s"
-        width="50"
-        alt=""
-      />
+      <img src="/Tasks1.png" width="40" alt="" />
     </div>
     <div class="midd-side side">
       <p class="parag">Tasks Builder</p>
@@ -19,8 +15,8 @@
           :fetchUserNotifications="fetchUserNotifications"
         />
       </div>
-      <button type="button" class="btn btn-danger" @click="logout">
-        Logout
+      <button type="button" class="btn btn-danger btn-log" @click="logout">
+        <i class="bi bi-box-arrow-left"></i>
       </button>
       <div class="d-flex">
         <input
@@ -31,7 +27,7 @@
           v-model="search"
           @input="hanldeSearch"
         />
-        <button type="button" class="btn btn-success">Search</button>
+        <!--  <button type="button" class="btn search-btn">Search</button> -->
       </div>
     </div>
 
@@ -98,7 +94,7 @@ const hanldeSearch = () => {
   min-width: 28%;
   max-width: 100%;
   text-align: center;
-  justify-content: space-between;
+  justify-content: space-around;
   margin: 0;
 }
 .side:last-child {
@@ -117,4 +113,13 @@ const hanldeSearch = () => {
   font-weight: 600;
   color: #444655;
 }
+
+.btn-log {
+  border-radius: 50%;
+}
+
+/* .search-btn {
+  background-color: #5e72c2;
+  color: white;
+} */
 </style>

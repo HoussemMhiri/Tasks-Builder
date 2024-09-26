@@ -20,7 +20,10 @@
         hourFormat="12"
       />
     </div>
-    <button type="submit" class="btn btn_submit">Submit</button>
+    <button type="submit" class="btn btn_submit" :disabled="loading">
+      <span v-if="loading">Submitting...</span>
+      <span v-else>Submit</span>
+    </button>
   </form>
 </template>
 
@@ -29,11 +32,14 @@ import dayjs from "dayjs";
 import axios from "../../../axiosToken";
 import Calendar from "primevue/calendar";
 import { ref } from "vue";
+import Swal from "sweetalert2";
 
 const addTaskForm = ref({
   todo: "",
   end_before: "",
 });
+
+const loading = ref(false);
 
 const formatDate = (date) => {
   return dayjs(date).format("YYYY-MM-DD HH:mm");
@@ -41,21 +47,25 @@ const formatDate = (date) => {
 
 const addTask = async () => {
   try {
+    loading.value = true;
     addTaskForm.value.end_before = formatDate(addTaskForm.value.end_before);
     const { data } = await axios.post("api/tasks", addTaskForm.value);
     console.log(data);
 
+    // Clear the form
     for (let key in addTaskForm.value) {
       addTaskForm.value[key] = "";
     }
 
-    await toast.fire({
+    await Swal.fire({
       icon: "success",
-      title: "Task Add it successfully",
+      title: "Task added successfully",
       timer: 3000,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error adding task:", error);
+  } finally {
+    loading.value = false;
   }
 };
 </script>
@@ -83,6 +93,12 @@ const addTask = async () => {
   margin-top: 1rem;
   background: #5e72c2;
   color: white;
+  transition: background-color 0.3s ease;
+}
+
+.btn_submit[disabled] {
+  background-color: #a0aec0;
+  cursor: not-allowed;
 }
 
 label {

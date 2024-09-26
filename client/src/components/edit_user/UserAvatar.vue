@@ -99,7 +99,6 @@ const handleFileUpload = (event) => {
 }
 
 .image-preview {
-  border: 1px solid var(--project-primary-color);
   border-radius: 50%;
   overflow: hidden;
 }
