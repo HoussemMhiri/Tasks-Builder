@@ -13,8 +13,9 @@
 
 <script setup>
 import { computed, onMounted, ref, watchEffect, nextTick } from "vue";
-import { Chart, registerables } from "chart.js"; // Use explicit imports for better control
-import ChartDataLabels from "chartjs-plugin-datalabels"; // Import the data labels plugin
+import { Chart, registerables } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+
 import axios from "../../../axiosToken";
 
 // Register Chart.js components and the data labels plugin
@@ -32,7 +33,7 @@ const getAllTasks = async () => {
   } catch (error) {
     console.error("Error fetching tasks:", error);
   } finally {
-    loading.value = false; // Loading is false after tasks are fetched
+    loading.value = false;
   }
 };
 

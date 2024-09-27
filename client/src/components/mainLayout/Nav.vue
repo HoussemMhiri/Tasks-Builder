@@ -116,6 +116,9 @@ const hanldeSearch = () => {
 
 .btn-log {
   border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  padding: 6px 1px;
 }
 
 /* .search-btn {

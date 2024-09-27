@@ -1,5 +1,8 @@
 <template>
-  <div class="todos_container">
+  <div v-if="loading" class="loading_position" style="height: 100%">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+  <div v-else class="todos_container">
     <div class="btn-group">
       <select name="dropdown-menu" id="" v-model="status">
         <option value="all">All</option>
@@ -30,13 +33,21 @@ const allTasks = ref("");
 
 const status = ref("all");
 
-const getAllTasks = async () => {
-  const { data } = await axios.get("api/tasks", {
-    params: { q: props.query, status: status.value },
-  });
+const loading = ref(true);
 
-  allTasks.value = data.tasks;
-  console.log(allTasks.value);
+const getAllTasks = async () => {
+  try {
+    const { data } = await axios.get("api/tasks", {
+      params: { q: props.query, status: status.value },
+    });
+
+    allTasks.value = data.tasks;
+    console.log(allTasks.value);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    loading.value = false;
+  }
 };
 
 onMounted(() => {
@@ -150,5 +161,11 @@ p {
   top: 10px;
   right: 10px;
   cursor: pointer;
+}
+
+.loading_position {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
